@@ -1,0 +1,2 @@
+run="clang++-7 -pthread -std=c++17 -o main Array/mergeSortArray.cpp; ./main"
+language="cpp"

@@ -40,7 +40,6 @@ public:
         copy(array, array + _size, temp);   // copy old data to temp array
         delete[] array;                     // Delete old array
         array = temp;                       // Assign temp to array
-        delete[] temp;
     }
 
     // Function to Insert data

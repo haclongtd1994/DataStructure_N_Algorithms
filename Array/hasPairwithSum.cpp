@@ -17,5 +17,5 @@ bool hasPairwithSum_1(std::vector<int> array, int sum){
 }
 
 int main(){
-    printf("has Pair of Sum: %d", hasPairwithSum_1(arr, 8));
+    printf("has Pair of Sum: %d\r\n", hasPairwithSum_1(arr, 8));
 }
