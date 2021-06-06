@@ -38,6 +38,7 @@ public:
 };
 
 int main(){
+  int target;
   Solution a;
   vector<int> input;
   unordered_map<int, int> result;
@@ -48,8 +49,9 @@ int main(){
   input.push_back(11);
   input.push_back(15);
 
-  result = a.twoSum(input, 9);
-  result_2 = a.twoSum_2(input, 9);
+  target = 128;
+  result = a.twoSum(input, target);
+  result_2 = a.twoSum_2(input, target);
 
   // printing map gquiz1
   unordered_map<int, int>::iterator itr, itr2;
