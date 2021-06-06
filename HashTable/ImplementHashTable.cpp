@@ -3,6 +3,7 @@
 #include <iomanip>
 using namespace std;
 
+/* -------------------------------- Hash Table ------------------------------ */
 // Implement struct for items of hash table
 struct ht_item{
   char* key;
@@ -10,109 +11,212 @@ struct ht_item{
 };
 typedef struct ht_item ht_item;
 
-struct Hash_Table{
+struct linked_list{
+  ht_item* item;
+  linked_list* next;
+};
+typedef struct linked_list linked_list;
+
+struct hash_table{
   ht_item** items;
+  linked_list** overflow_buckets;
   int size;
   int count;
 };
-typedef class Hash_Table Hash_Table;
+typedef struct hash_table hash_table;
 
-// Implement class for hash table
-class c_Hash_Table{
+class Hash_Table{
 private:
-  Hash_Table* table;
+  hash_table* table;
 public:
-  c_Hash_Table(int size){
-    table = (Hash_Table*)malloc(sizeof(Hash_Table));
-    table->size = size;
-    table->count = 0;
-    table->items = (ht_item**)calloc(table->size, sizeof(ht_item*));
-    for (int i=0;i<table->size;i++){
-      table->items[i] = NULL;
+  Hash_Table(int size){
+    table = (hash_table*)malloc(sizeof(hash_table));
+    this->table->size = size;
+    this->table->count = 0;
+    this->table->items = \
+      (ht_item**)calloc(this->table->size, sizeof(ht_item*));
+    this->table->overflow_buckets = \
+      (linked_list**)calloc(this->table->size, sizeof(linked_list*));
+    for (int i=0; i<this->table->size; i++){
+      this->table->items[i] = NULL;
+      this->table->overflow_buckets[i] = NULL;
     }
   }
 
-  ~c_Hash_Table(){
-    for (int i=0;i<table->size;i++){
-      if (table->items[i]!=NULL){
-        free(table->items[i]->key);
-        free(table->items[i]);
-      }
+  ~Hash_Table(){
+    for (int i=0; i<this->table->size; i++){
+      free(this->table->items[i]);
+      free(this->table->overflow_buckets[i]);
     }
-    free(table->items);
-    free(table);
+    free(this->table->items);
+    free(this->table->overflow_buckets);
+    free(this->table);
   }
 
   int _hash(char* key){
     int hash = 0;
-    for (int i = 0; key[i] ; i++){
-      hash = (hash + ( (int)key[i] * i ) ) % (table->size);
-    }
+    for (int i=0; key[i]; i++)
+      hash = (hash + ((int)key[i] * i)) % table->size;
     return hash;
   }
 
-  ht_item* create_item(char* key, int value){
-    ht_item* item = (ht_item*)malloc(sizeof(ht_item));
-    item->key = (char*)malloc( sizeof(key)/sizeof(char) + 1);
+  void handle_collission(int index, ht_item* item){
+    linked_list* list = (linked_list*)malloc(sizeof(linked_list));
+    list->item = item;
+    list->next = NULL;
 
-    copy(key, key + sizeof(key)/sizeof(char), item->key);
-    item->value = value;
-    return item;
-  }
-
-  void handle_collision(ht_item* item) {
+    if(!this->table->overflow_buckets[index]){
+      this->table->overflow_buckets[index] = list;
+      return;
+    }
+    else if(!this->table->overflow_buckets[index]->next) {
+      this->table->overflow_buckets[index]->next = list;
+      return;
+    }
+    else {
+      linked_list* temp = this->table->overflow_buckets[index];
+      while(temp->next->next)
+        temp = temp->next;
+      temp = temp->next;
+      temp->next = list;
+    }
   }
 
   void ht_insert(char* key, int value){
-    // Create item
-    ht_item* item = create_item(key, value);
-    int index = _hash(key);
-    
-    // Check key not exist
-    if (table->items[index] == NULL){
-      // Check table full
-      if (table->size == table->count){
-        cout<<"Insert Error: Hash table full"<<endl;
+    int index = Hash_Table::_hash(key);
+    // create item object
+    ht_item* item = (ht_item*)malloc(sizeof(ht_item));
+    item->key = (char*)malloc(sizeof(char));
+    copy(key, key + (sizeof(key)/sizeof(char)), item->key);
+    item->value = value;
+
+    // Check index exist or not
+    if (!this->table->items[index]){
+      // Check full capacity
+      if (this->table->size == this->table->count){
+        cout << "Hash is full!";
+        return;
+      }
+      // Add new item
+      else{
+        this->table->items[index] = item;
+        this->table->count++;
+        return;
+      }
+    }
+    // If existing
+    else {
+      // Check key match or not
+      if (strcmp(this->table->items[index]->key, key) == 0){
+        this->table->items[index]->value = value;
+        return;
+      }
+      // Handle collission
+      else {
+        handle_collission(index, item);
+        return;
+      }
+    }
+  }
+
+  void ht_delete(char* key) {
+    int index = this->_hash(key);
+    ht_item* item = this->table->items[index];
+    linked_list* node = this->table->overflow_buckets[index];
+
+    // Not exist data
+    if (!item) {
+      cout << "Key string not exist hash key! Please check again!";
+      return;
+    }
+    // Exist data
+    else {
+      // Check node: NULL and key exist in item
+      if (!node && strcmp(item->key, key) == 0) {
+        item->key = NULL;
+        item = NULL;
+        free(item->key);
         free(item);
+        this->table->count--;
         return;
       }
-      else{
-        table->items[index] = item;
-        table->count++;
-      }
-    }
-    // If key exist
-    else{
-      // Scenario 1: Update value
-      if (strcmp(table->items[index]->key, key)){
-        table->items[index]->value = value;
-      }
-      // Scenario 2: Collision
-      else{
-        handle_collision(item);
-        return;
+      // Node != NULL
+      else if (node) {
+        // Check position of data
+        // Exist at items of hash table?
+        if (strcmp(item->key, key) == 0) {
+          linked_list* temp = node->next;
+          node->next = NULL;
+          ht_item* itemp = (ht_item*)malloc(sizeof(ht_item));
+          itemp->key = (char*)malloc(sizeof(char));
+          copy(key, key + (sizeof(key) / sizeof(char)), node->item->key);
+          itemp->value = node->item->value;
+          item = itemp;
+
+          this->table->overflow_buckets[index] = temp;
+          return;
+        }
+        // Exist in overflow buckets
+        else {
+          linked_list* curr = node;
+          linked_list* prev = NULL;
+
+          while (curr) {
+            if (strcmp(curr->item->key, key) == 0) {
+              if (prev == NULL) {
+                this->table->overflow_buckets[index] = curr->next;
+                free(curr->item->key);
+                free(curr->item);
+                free(curr);
+                return;
+              }
+              else {
+                prev->next = curr->next;
+                curr->next = NULL;
+                free(curr->item->key);
+                free(curr->item);
+                free(curr);
+                return;
+              }
+            }
+
+            prev = curr;
+            curr = curr->next;
+          }
+        }
       }
     }
   }
 
-  void print_all(){
-    cout<<"Hash Table print out:"<<endl;
+  void print(){
+    cout<< "Hash Table:" << endl;
     cout<<setw(10)<<"Key:"<<setw(20)<<"Value:"<<endl;
-    for (int i=0;i<table->size;i++){
-      if (table->items[i]!=NULL){
-        cout<<setw(10)<<table->items[i]->key<<setw(20)<<table->items[i]->value<<endl;
+    for (int i=0; i<this->table->size; i++){
+      if (this->table->items[i]){
+        cout << setw(10) << this->table->items[i]->key << \
+          setw(20) << this->table->items[i]->value;
+        linked_list* node = this->table->overflow_buckets[i];
+        while(node){
+          cout << " => overflow_buckets => " << "Key: " << node->item->key \
+            << "  Value:" << node->item->value;
+          node = node->next;
+        }
+        cout<<endl;
       }
     }
   }
-
 };
 
 
 
 int main(){
-  c_Hash_Table test(5);
-  test.ht_insert((char*)"Hung", 10);
-  test.ht_insert((char*)"Y", 100);
-  test.print_all();
+  Hash_Table table(4);
+  cout << table._hash((char *)"Hung") << " " << table._hash((char *)"Heo");
+  table.ht_insert((char *)"Hung", 123);
+  table.ht_insert((char *)"Y", 456);
+  table.ht_insert((char *)"Cho", 789);
+  table.ht_insert((char *)"YYYY", 9999);
+  table.ht_delete((char*)"YYYY");
+  table.print();
   return 0;
 }
