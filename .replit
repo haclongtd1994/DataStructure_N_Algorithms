@@ -1,2 +1,0 @@
-run="clang++-7 -pthread -std=c++17 -o main HashTable/ImplementHashTable.cpp; ./main"
-language="cpp"

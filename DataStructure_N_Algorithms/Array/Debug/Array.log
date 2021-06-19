@@ -1,0 +1,9 @@
+﻿  Main.cpp
+C:\Git\DataStructure_N_Algorithms\DataStructure_N_Algorithms\Array\Two_Sum.cpp(8,23): warning C4018: '<': signed/unsigned mismatch
+C:\Git\DataStructure_N_Algorithms\DataStructure_N_Algorithms\Array\Two_Sum.cpp(9,31): warning C4018: '<': signed/unsigned mismatch
+C:\Git\DataStructure_N_Algorithms\DataStructure_N_Algorithms\Array\Two_Sum.cpp(24,23): warning C4018: '<': signed/unsigned mismatch
+C:\Git\DataStructure_N_Algorithms\DataStructure_N_Algorithms\Array\hasPairwithSum.cpp(7,20): warning C4018: '<': signed/unsigned mismatch
+C:\Git\DataStructure_N_Algorithms\DataStructure_N_Algorithms\Array\hasPairwithSum.cpp(8,26): warning C4018: '<': signed/unsigned mismatch
+C:\Git\DataStructure_N_Algorithms\DataStructure_N_Algorithms\Array\Maximum_Subarray.cpp(40,18): warning C4018: '<': signed/unsigned mismatch
+C:\Git\DataStructure_N_Algorithms\DataStructure_N_Algorithms\Array\mergeSortArray.cpp(5,40): warning C4018: '<': signed/unsigned mismatch
+  Array.vcxproj -> C:\Git\DataStructure_N_Algorithms\DataStructure_N_Algorithms\Debug\Array.exe
