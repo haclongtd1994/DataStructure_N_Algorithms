@@ -287,6 +287,19 @@ namespace FirstRecurringChar {
     }
   };
 
+  // Using the hash table data structure lib with unordered_map
+  int first_recurring_unordered_map(int* arr, int length) {
+    unordered_map<int, int> map;
+    for (int i = 0; i < length; i++) {
+      if (map[arr[i]] != NULL) {
+        return arr[i];
+      }
+      else {
+        map[arr[i]] = i;
+      }
+    }
+  }
+  // O(n)
 
   // Using the hash table data structure to solve this problem
   int first_recurring_ht(int* arr, int length) {
@@ -343,9 +356,11 @@ done:
 
     int result = first_recurring(arr, sizeof(arr) / sizeof(int));
     int retusl2 = first_recurring_ht(arr, sizeof(arr) / sizeof(int));
+    int retusl3 = first_recurring_unordered_map(arr, sizeof(arr) / sizeof(int));
 
     cout << result << endl;
     cout << retusl2 << endl;
+    cout << retusl3 << endl;
 
 
     //Hash_table table(10);

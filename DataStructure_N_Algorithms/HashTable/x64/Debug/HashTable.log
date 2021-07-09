@@ -1,2 +1,3 @@
 ﻿  HashTable.cpp
+C:\Git\DataStructure_N_Algorithms\DataStructure_N_Algorithms\HashTable\First_Recurring_Character.cpp(301): warning C4715: 'FirstRecurringChar::first_recurring_unordered_map': not all control paths return a value
   HashTable.vcxproj -> C:\Git\DataStructure_N_Algorithms\DataStructure_N_Algorithms\x64\Debug\HashTable.exe
