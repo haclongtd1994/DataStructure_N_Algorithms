@@ -1,5 +1,7 @@
 #include "Implement_Stack_LinkedList.cpp"
 #include "Implement_Stack_Array.cpp"
+#include "Implement_Queue_LinkedList.cpp"
+#include "Implement_Queue_Array.cpp"
 
 int main() {
   Stack_LinkedList stacklinkedlist((char*)"Hello");
@@ -17,4 +19,26 @@ int main() {
   StackArray.push("!");
   StackArray.pop();
   StackArray.print();
+
+  cout << endl;
+  cout << "---------------------------" << endl;
+  Queue queue((char*)"Hello");
+  queue.enqueue((char*)"Hung");
+  queue.enqueue((char*)"Ne");
+  queue.enqueue((char*)"!");
+  queue.dequeue();
+  queue.print();
+
+  cout << endl;
+  cout << "---------------------------" << endl;
+  Queue_Array queue_arr(1);
+  queue_arr.enqueue(10);
+  queue_arr.enqueue(100);
+  queue_arr.enqueue(1000);
+  queue_arr.dequeue();
+  queue_arr.dequeue();
+  queue_arr.dequeue();
+  queue_arr.enqueue(100);
+  queue_arr.dequeue();
+  queue_arr.print();
 }

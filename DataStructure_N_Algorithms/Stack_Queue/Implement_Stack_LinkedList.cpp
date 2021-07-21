@@ -39,6 +39,7 @@ public:
 
     while (temp) {
       cout << counter << ": " << temp->items << endl;
+      counter++;
       temp = temp->next;
     }
   }
@@ -68,6 +69,7 @@ public:
     else if (this->length == 1) {
       this->top = NULL;
       this->bottom = NULL;
+      this->length--;
     }
     else {
       Stag_Linkedlist* temp = this->top;
