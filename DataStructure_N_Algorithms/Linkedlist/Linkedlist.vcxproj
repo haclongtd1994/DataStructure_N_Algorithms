@@ -24,6 +24,7 @@
     <ProjectGuid>{1728b621-671c-4368-a07b-4d900f15c1ba}</ProjectGuid>
     <RootNamespace>Linkedlist</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
+    <ProjectName>003_Linkedlist</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
